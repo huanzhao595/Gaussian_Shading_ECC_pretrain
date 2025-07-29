@@ -1,0 +1,63 @@
+#'on':
+#  github:
+#    branches:
+#      only: main
+jobs:
+  CloneRepo:
+    resources:
+      instance-type: P4000
+    outputs:
+      repo:
+        type: volume
+    uses: git-checkout@v1
+    with:
+      url: context.event.github.url
+  HelloWorld:
+    resources:
+      instance-type: P4000
+    needs:
+      - CloneRepo
+    inputs:
+      repo: CloneRepo.outputs.repo
+    uses: script@v1
+    with:
+      script: |-
+        cd /inputs/repo
+        pip install -r requirements.txt
+        python run_gaussian_shading.py \
+          --jpeg_ratio 30 \
+          --fpr 0.000001 \
+          --channel_copy 1 \
+          --hw_copy 8 \
+          --chacha 1 \
+          --num 2 \
+          --reference_model ViT-g-14 \
+          --reference_model_pretrain laion2b_s12b_b42k
+      image: paperspace/gradient-base:pt112-tf29-jax0317-py39-20230125
+
+## original version
+'on':
+  github:
+    branches:
+      only: main
+jobs:
+  CloneRepo:
+    resources:
+      instance-type: C5
+    outputs:
+      repo:
+        type: volume
+    uses: git-checkout@v1
+    with:
+      url: context.event.github.url
+  HelloWorld:
+    resources:
+      instance-type: C5
+    needs:
+      - CloneRepo
+    inputs:
+      repo: CloneRepo.outputs.repo
+    uses: script@v1
+    with:
+      script: python /inputs/repo/hello.py
+      image: tensorflow/tensorflow:1.14.0-py3

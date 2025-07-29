@@ -1,0 +1,36 @@
+'on':
+  github:
+    branches:
+      only: main
+jobs:
+  CloneRepo:
+    outputs:
+      repo:
+        type: volume
+    resources:
+      instance-type: P4000
+    uses: git-checkout@v1
+    with:
+      url: context.event.github.url
+  HelloWorld:
+    inputs:
+      repo: CloneRepo.outputs.repo
+    resources:
+      instance-type: P4000
+    needs:
+      - CloneRepo
+    uses: script@v1
+    with:
+      image: paperspace/gradient-base:pt211-tf215-cudatk120-py311-20240202
+      script: |-
+        cd /inputs/repo
+        pip install -r requirements.txt
+        python run_gaussian_shading.py \
+          --jpeg_ratio 30 \
+          --fpr 0.000001 \
+          --channel_copy 1 \
+          --hw_copy 8 \
+          --chacha 1 \
+          --num 2 \
+          --reference_model ViT-g-14 \
+          --reference_model_pretrain laion2b_s12b_b42k
