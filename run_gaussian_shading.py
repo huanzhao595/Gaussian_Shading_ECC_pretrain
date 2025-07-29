@@ -11,11 +11,11 @@ import open_clip
 from optim_utils import *
 from io_utils import *
 from image_utils import *
-# from watermark import *
+from watermark import *
 # from watermark_bch1_63_7_repeat7 import *
 # from watermark_bch1_63_7_repeat3 import *
 # from watermark_bch1_63_7_repeat5 import *
-from watermark_bch1_63_1 import *
+# from watermark_bch1_63_1 import *
 # from watermark_bch1_63_1_remove_smoth_function import *
 
 # from watermark_bch1_2_63_7_repeat3 import *
@@ -145,8 +145,8 @@ if __name__ == '__main__':
     parser.add_argument('--num_inference_steps', default=50, type=int)
     parser.add_argument('--num_inversion_steps', default=None, type=int)
     parser.add_argument('--gen_seed', default=0, type=int)
-    parser.add_argument('--channel_copy', default=1, type=int)
-    parser.add_argument('--hw_copy', default=8, type=int) # 8
+    parser.add_argument('--channel_copy', default=4, type=int)
+    parser.add_argument('--hw_copy', default=2, type=int) # 8
     parser.add_argument('--user_number', default=1000000, type=int)
     parser.add_argument('--fpr', default=0.000001, type=float)
     parser.add_argument('--output_path', default='./output/')
