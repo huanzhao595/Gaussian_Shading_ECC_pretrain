@@ -47,94 +47,94 @@ def main(args):
                                                                                   device=device)
         ref_tokenizer = open_clip.get_tokenizer(args.reference_model)
 
-    # # dataset
-    # dataset, prompt_key = get_dataset(args)
+    # dataset
+    dataset, prompt_key = get_dataset(args)
 
-    # # class for watermark
-    # if args.chacha == 1:
-    #     print("args.chacha")
-    #     watermark = Gaussian_Shading_chacha(args.channel_copy, args.hw_copy, args.fpr, args.user_number)
-    # else:
-    #     print("args.chacha, no chacha")
-    #     #a simple implement,
-    #     watermark = Gaussian_Shading(args.channel_copy, args.hw_copy, args.fpr, args.user_number)
+    # class for watermark
+    if args.chacha == 1:
+        print("args.chacha")
+        watermark = Gaussian_Shading_chacha(args.channel_copy, args.hw_copy, args.fpr, args.user_number)
+    else:
+        print("args.chacha, no chacha")
+        #a simple implement,
+        watermark = Gaussian_Shading(args.channel_copy, args.hw_copy, args.fpr, args.user_number)
 
-    # os.makedirs(args.output_path, exist_ok=True)
+    os.makedirs(args.output_path, exist_ok=True)
 
-    # # assume at the detection time, the original prompt is unknown
-    # tester_prompt = ''
-    # text_embeddings = pipe.get_text_embedding(tester_prompt)
+    # assume at the detection time, the original prompt is unknown
+    tester_prompt = ''
+    text_embeddings = pipe.get_text_embedding(tester_prompt)
 
-    # #acc
-    # acc = []
-    # #CLIP Scores
-    # clip_scores = []
+    #acc
+    acc = []
+    #CLIP Scores
+    clip_scores = []
 
-    # #test
-    # for i in tqdm(range(args.num)):
-    #     seed = i + args.gen_seed
-    #     current_prompt = dataset[i][prompt_key]
+    #test
+    for i in tqdm(range(args.num)):
+        seed = i + args.gen_seed
+        current_prompt = dataset[i][prompt_key]
 
-    #     #generate with watermark
-    #     set_random_seed(seed)
-    #     init_latents_w = watermark.create_watermark_and_return_w()
-    #     outputs = pipe(
-    #         current_prompt,
-    #         num_images_per_prompt=1,
-    #         guidance_scale=args.guidance_scale,
-    #         num_inference_steps=args.num_inference_steps,
-    #         height=args.image_length,
-    #         width=args.image_length,
-    #         latents=init_latents_w,
-    #     )
-    #     image_w = outputs.images[0]
+        #generate with watermark
+        set_random_seed(seed)
+        init_latents_w = watermark.create_watermark_and_return_w()
+        outputs = pipe(
+            current_prompt,
+            num_images_per_prompt=1,
+            guidance_scale=args.guidance_scale,
+            num_inference_steps=args.num_inference_steps,
+            height=args.image_length,
+            width=args.image_length,
+            latents=init_latents_w,
+        )
+        image_w = outputs.images[0]
 
-    #     # distortion
-    #     image_w_distortion = image_distortion(image_w, seed, args)
+        # distortion
+        image_w_distortion = image_distortion(image_w, seed, args)
 
-    #     # reverse img
-    #     image_w_distortion = transform_img(image_w_distortion).unsqueeze(0).to(text_embeddings.dtype).to(device)
+        # reverse img
+        image_w_distortion = transform_img(image_w_distortion).unsqueeze(0).to(text_embeddings.dtype).to(device)
 
-    #     ##=====在此处获取加了水印的图片，然后解码，再对比准确度。=====####
-    #     # ALG = "dwtDct"
-    #     # BIT_LEN = 32  # 你存起来的长
-    #     # # IMG = "sd_out_wm.png"
-    #     # decode_message = pipe.decode_watermark_from_path(image_w_distortion, ALG, BIT_LEN)
-    #     # bitacc = pipe.eval_wm(args.rowmsg, decode_message)
+        ##=====在此处获取加了水印的图片，然后解码，再对比准确度。=====####
+        # ALG = "dwtDct"
+        # BIT_LEN = 32  # 你存起来的长
+        # # IMG = "sd_out_wm.png"
+        # decode_message = pipe.decode_watermark_from_path(image_w_distortion, ALG, BIT_LEN)
+        # bitacc = pipe.eval_wm(args.rowmsg, decode_message)
         
         
-    #     image_latents_w = pipe.get_image_latents(image_w_distortion, sample=False)
-    #     reversed_latents_w = pipe.forward_diffusion(
-    #         latents=image_latents_w,
-    #         text_embeddings=text_embeddings,
-    #         guidance_scale=1,
-    #         num_inference_steps=args.num_inversion_steps,
-    #     )
+        image_latents_w = pipe.get_image_latents(image_w_distortion, sample=False)
+        reversed_latents_w = pipe.forward_diffusion(
+            latents=image_latents_w,
+            text_embeddings=text_embeddings,
+            guidance_scale=1,
+            num_inference_steps=args.num_inversion_steps,
+        )
 
-    #     #acc metric
-    #     acc_metric = watermark.eval_watermark(reversed_latents_w)
-    #     acc.append(acc_metric)
+        #acc metric
+        acc_metric = watermark.eval_watermark(reversed_latents_w)
+        acc.append(acc_metric)
 
-    #     #CLIP Score
-    #     print(args.reference_model)
-    #     print(args.reference_model is not None)
-    #     if args.reference_model is not None:
-    #         # print("11111")
-    #         socre = measure_similarity([image_w], current_prompt, ref_model,
-    #                                           ref_clip_preprocess,
-    #                                           ref_tokenizer, device)
-    #         clip_socre = socre[0].item()
-    #     else:
-    #         # print("222222")
-    #         clip_socre = 0
-    #     clip_scores.append(clip_socre)
+        #CLIP Score
+        print(args.reference_model)
+        print(args.reference_model is not None)
+        if args.reference_model is not None:
+            # print("11111")
+            socre = measure_similarity([image_w], current_prompt, ref_model,
+                                              ref_clip_preprocess,
+                                              ref_tokenizer, device)
+            clip_socre = socre[0].item()
+        else:
+            # print("222222")
+            clip_socre = 0
+        clip_scores.append(clip_socre)
 
-    #     print("acc_metric: ", acc, "clip_socre: ", clip_scores)
+        print("acc_metric: ", acc, "clip_socre: ", clip_scores)
         
-    # #tpr metric
-    # tpr_detection, tpr_traceability = watermark.get_tpr()
-    # #save metrics
-    # save_metrics(args, tpr_detection, tpr_traceability, acc, clip_scores)
+    #tpr metric
+    tpr_detection, tpr_traceability = watermark.get_tpr()
+    #save metrics
+    save_metrics(args, tpr_detection, tpr_traceability, acc, clip_scores)
 
 
 if __name__ == '__main__':
