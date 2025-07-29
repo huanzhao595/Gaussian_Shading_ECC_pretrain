@@ -80,7 +80,7 @@ class Gaussian_Shading_chacha:
     def eval_watermark(self, reversed_w):
         reversed_m = (reversed_w > 0).int()
         reversed_sd = self.stream_key_decrypt(reversed_m.flatten().cpu().numpy())
-        reversed_watermark = self.diffusion_inverse(reversed_sd)
+        reversed_watermark = self.diffusion_inverse(reversed_sd) ## need be change to error correct code.---wrote by lunar
         correct = (reversed_watermark == self.watermark).float().mean().item()
         if correct >= self.tau_onebit:
             self.tp_onebit_count = self.tp_onebit_count+1
@@ -90,9 +90,6 @@ class Gaussian_Shading_chacha:
 
     def get_tpr(self):
         return self.tp_onebit_count, self.tp_bits_count
-
-
-
 
 class Gaussian_Shading:
     def __init__(self, ch_factor, hw_factor, fpr, user_number):
@@ -162,5 +159,3 @@ class Gaussian_Shading:
 
     def get_tpr(self):
         return self.tp_onebit_count, self.tp_bits_count
-
-
