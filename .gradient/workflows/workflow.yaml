@@ -44,7 +44,7 @@ jobs:
         cd /inputs/repo
         pip install -r requirements.txt
         python run_gaussian_shading.py \
-          --jpeg_ratio 70 \
+          --jpeg_ratio 10 \
           --fpr 0.000001 \
           --channel_copy 1 \
           --hw_copy 8 \
