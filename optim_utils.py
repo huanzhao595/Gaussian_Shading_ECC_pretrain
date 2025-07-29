@@ -46,6 +46,16 @@ def save_metrics(args, tpr_detection, tpr_traceability, acc, clip_scores):
             filename = name
 
     if args.reference_model is not None:
+        metrics = (
+            f"====filename==== {filename}  "
+            f"tpr_detection: {tpr_detection/args.num:.4f}  "
+            f"tpr_traceability: {tpr_traceability/args.num:.4f}  "
+            f"mean_acc: {mean(acc):.4f}  std_acc: {stdev(acc):.4f}  "
+            f"mean_clip_score: {mean(clip_scores):.4f}  std_clip_score: {stdev(clip_scores):.4f}"
+        )
+        
+        # 打印到控制台
+        print(metrics)
         with open(args.output_path + filename, "a") as file:
             file.write('tpr_detection:' + str(tpr_detection / args.num) + '      ' +
                        'tpr_traceability:' + str(tpr_traceability / args.num) + '      ' +
@@ -54,6 +64,16 @@ def save_metrics(args, tpr_detection, tpr_traceability, acc, clip_scores):
                        '\n')
 
     else:
+        metrics = (
+            f"====filename==== {filename}  "
+            f"tpr_detection: {tpr_detection/args.num:.4f}  "
+            f"tpr_traceability: {tpr_traceability/args.num:.4f}  "
+            f"mean_acc: {mean(acc):.4f}  std_acc: {stdev(acc):.4f}  "
+            f"mean_clip_score: {mean(clip_scores):.4f}  std_clip_score: {stdev(clip_scores):.4f}"
+        )
+        
+        # 打印到控制台
+        print(metrics)
         with open(args.output_path + filename, "a") as file:
             file.write('tpr_detection:' + str(tpr_detection / args.num) + '      ' +
                        'tpr_traceability:' + str(tpr_traceability / args.num) + '      ' +
