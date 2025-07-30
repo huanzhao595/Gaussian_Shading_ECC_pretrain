@@ -16,7 +16,6 @@ jobs:
       image: alpine:latest
       script: |
         ls /inputs/doc
-        cat /inputs/doc/workflow_baseline_jpeg10.yaml
   
 #   CloneRepo:
 #     outputs:
