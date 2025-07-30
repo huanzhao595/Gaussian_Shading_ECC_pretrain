@@ -4,11 +4,11 @@
       only: main
 jobs:
   LoadDatasetJob:
-    inputs:
-      my_dataset:
-        type: dataset
-        with:
-          ref: demo-dataset
+    # inputs:
+    #   my_dataset:
+    #     type: dataset
+    #     with:
+    #       ref: demo-dataset
     resources:
       instance-type: C5
     uses: script@v1
