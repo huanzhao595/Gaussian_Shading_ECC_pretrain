@@ -8,7 +8,7 @@ jobs:
       my_dataset:
         type: dataset
         with:
-          ref: demo-dataset
+          ref: test
     resources:
       instance-type: C5
     uses: script@v1
