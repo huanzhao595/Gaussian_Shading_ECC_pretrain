@@ -3,9 +3,9 @@
     branches:
       only: main
 jobs:
-  ProcessDocument:
+  LoadDatasetJob:
     inputs:
-      doc:
+      my_dataset:
         type: dataset
         with:
           ref: demo-dataset
@@ -15,7 +15,7 @@ jobs:
     with:
       image: alpine:latest
       script: |
-        ls /inputs/doc
+        ls /inputs/my_dataset
   
 #   CloneRepo:
 #     outputs:
