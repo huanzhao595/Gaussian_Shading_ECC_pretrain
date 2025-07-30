@@ -19,7 +19,7 @@ jobs:
       pretrainedNetwork:
         type: dataset
         with:
-          ref: demo-dataset
+          ref: mydata
     uses: container@v1
     with:
       image: alpine:latest
