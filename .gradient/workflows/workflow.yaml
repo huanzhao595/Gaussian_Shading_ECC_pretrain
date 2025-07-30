@@ -1,21 +1,39 @@
-'on':
-  github:
-    branches:
-      only: main
+version: v2
+
 jobs:
   LoadDatasetJob:
-    # inputs:
-    #   my_dataset:
-    #     type: dataset
-    #     with:
-    #       ref: demo-dataset
+    inputs:
+      my_dataset:
+        type: dataset
+        with:
+          ref: demo-dataset
     resources:
       instance-type: C5
     uses: script@v1
     with:
-      image: paperspace/gradient-base:pt112-tf29-jax0317-py39-20230125
+      image: alpine:latest
       script: |
         ls /inputs/my_dataset
+
+
+# 'on':
+#   github:
+#     branches:
+#       only: main
+# jobs:
+#   LoadDatasetJob:
+#     # inputs:
+#     #   my_dataset:
+#     #     type: dataset
+#     #     with:
+#     #       ref: demo-dataset
+#     resources:
+#       instance-type: C5
+#     uses: script@v1
+#     with:
+#       image: paperspace/gradient-base:pt112-tf29-jax0317-py39-20230125
+#       script: |
+#         ls /inputs/my_dataset
   
 #   CloneRepo:
 #     outputs:
