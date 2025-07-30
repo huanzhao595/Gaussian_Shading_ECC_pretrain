@@ -1,5 +1,8 @@
 version: v2
-
+'on':
+  github:
+    branches:
+      only: main
 jobs:
   LoadDatasetJob:
     inputs:
