@@ -19,36 +19,34 @@ jobs:
       pretrainedNetwork:
         type: dataset
         with:
-          ref: mydata
+          ref: demo-dataset
     uses: container@v1
     with:
       image: alpine:latest
       args:
-        - wget 
-        - https://huggingface.co/laion/CLIP-ViT-g-14-laion2B-s12B-b42K/resolve/main/open_clip_pytorch_model.bin
-        - -P
+        - ls 
         - /outputs/pretrainedNetwork/
-  HelloWorld:
-    needs:
-      - CloneRepo
-      - DownloadPretrained
-    inputs:
-      repo: CloneRepo.outputs.repo
-      pretrained: DownloadPretrained.outputs.pretrainedNetwork
-    resources:
-      instance-type: P5000
-    uses: script@v1
-    with:
-      image: paperspace/gradient-base:pt112-tf29-jax0317-py39-20230125
-      script: |-
-        cd /inputs/repo
-        pip install -r requirements.txt
-        python run_gaussian_shading.py \
-          --jpeg_ratio 10 \
-          --fpr 0.000001 \
-          --channel_copy 1 \
-          --hw_copy 8 \
-          --chacha 1 \
-          --num 200 \
-          --reference_model ViT-g-14 \
-          --reference_model_pretrain laion2b_s12b_b42k
+  # HelloWorld:
+  #   needs:
+  #     - CloneRepo
+  #     - DownloadPretrained
+  #   inputs:
+  #     repo: CloneRepo.outputs.repo
+  #     pretrained: DownloadPretrained.outputs.pretrainedNetwork
+  #   resources:
+  #     instance-type: P5000
+  #   uses: script@v1
+  #   with:
+  #     image: paperspace/gradient-base:pt112-tf29-jax0317-py39-20230125
+  #     script: |-
+  #       cd /inputs/repo
+  #       pip install -r requirements.txt
+  #       python run_gaussian_shading.py \
+  #         --jpeg_ratio 10 \
+  #         --fpr 0.000001 \
+  #         --channel_copy 1 \
+  #         --hw_copy 8 \
+  #         --chacha 1 \
+  #         --num 200 \
+  #         --reference_model ViT-g-14 \
+  #         --reference_model_pretrain laion2b_s12b_b42k
