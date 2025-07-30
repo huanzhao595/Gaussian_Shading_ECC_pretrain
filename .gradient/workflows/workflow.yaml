@@ -1,7 +1,7 @@
-'on':
-  github:
-    branches:
-      only: main
+# 'on':
+#   github:
+#     branches:
+#       only: main
 jobs:
   CloneRepo:
     outputs:
